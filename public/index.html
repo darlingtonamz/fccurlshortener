@@ -3,23 +3,30 @@
 <html>
 
 	<head>
-		<title>Clementine.js - The elegant and lightweight full stack JavaScript boilerplate.</title>
+		<title>URL shortener | Amanze</title>
 
 		<link href="/public/css/main.css" rel="stylesheet" type="text/css">
+		<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+		<style media="screen">
+			body{background: #eee; font-family: 'Roboto', sans-serif;}
+			.head{text-align: center; font-size: 30px;margin: 10px;}
+			a{text-decoration: none}
+		</style>
 	</head>
 
 	<body>
-			<div class="clementine-text">API Basejump: Timestamp microservice </div>
+			<div class="head">API Basejump: URL shortener </div>
 			<div class="card mid-size center">
 				<h3>Example usage:</h3><br>
-				<a href="https://fcctime.herokuapp.com/December%2015,%202015">
-					https://fcctime.herokuapp.com/December%2015,%202015
-				</a><br>
-				<a href="https://fcctime.herokuapp.com/1450137600">
-					https://fcctime.herokuapp.com/1450137600
+				<a href="https://urlstner.herokuapp.com/:new/http://google.com">
+					https://urlstner.herokuapp.com/:new/http://google.com
+				</a><br><br>
+				<a href="https://urlstner.herokuapp.com/:new/https://www.youtube.com/watch?v=Jl0G8KqpBV0">
+					https://urlstner.herokuapp.com/:new/https://www.youtube.com/watch?v=Jl0G8KqpBV0
 				</a><br>
 				<h3>Example output:</h3><br>
-				{ "unix": 1450137600, "natural": "December 15, 2015" }
+					<code>{<br>"original_url": "http://www.google.com",<br>"short_url": "http://localhost:8080/582497"<br>}</code>
+
 			</div>
 
 		<!-- <script type="text/javascript" src="common/ajax-functions.js"></script>
