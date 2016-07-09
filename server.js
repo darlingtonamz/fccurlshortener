@@ -1,4 +1,6 @@
 'use strict';
+//	REFERENCE
+// This code was made possible thanks to the insight gotten from https://github.com/beader/fcc-urlshortener
 
 var express = require('express');
 var routes = require('./app/routes/index.js');
