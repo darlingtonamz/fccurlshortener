@@ -1,92 +1,34 @@
 'use strict';
 
 var path = process.cwd();
-var ClickHandler = require(path + '/app/controllers/clickHandler.server.js');
 
-module.exports = function (app, passport) {
+var site = require("../controllers/userController.client.js")
+var webex = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i;
+var webRegex = new RegExp(webex);
 
-	// function isLoggedIn (req, res, next) {
-	// 	if (req.isAuthenticated()) {
-	// 		return next();
-	// 	} else {
-	// 		res.redirect('/login');
-	// 	}
-	// }
+module.exports = function (app, db) {
 
-	var clickHandler = new ClickHandler();
+	app.route('/')
+		.get(function (req, res) {
+			res.sendFile(path + '/public/index.html');
+		});
 
-	function epochToDate(str){
-		var monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
-		var date = new Date(parseInt(str) * 1000);
-		var out = (monthNames[date.getMonth()]) + " " +
-		    date.getDate() + ", " +
-		    date.getFullYear();
-		return out;
-	}
+	app.route('/new')
+    .get(function(req, res) {
+        res.send('{"Error": "You need to add a proper url"}');
+    });
 
-	function dateToEpoch(str){
-		var out = Date.parse(str) / 1000;
-		return out;
-	}
+	app.route('/new/:url*')
+		.get(function (req, res) {
+			var url = req.url.slice(5);
+			// var extra = req.params.extra;
+			// console.log(JSON.stringify(req.params));
+			site.handleNewURL(req, res, db);
+		});
 
-		app.route('/')
-			.get(function (req, res) {
-				res.sendFile(path + '/public/index.html');
-			});
-
-		app.route('/:extra')
-			.get(function (req, res) {
-				var out = {};
-				var extra = req.params.extra;
-				if (/^\d+$/.test(extra)) {
-					out.unix = extra;
-					out.natural = epochToDate(extra);
-				} else {
-					out.unix = dateToEpoch(extra);
-					out.natural = extra;
-				}
-
-				if (Boolean(out.unix))
-					res.send(out);
-				else
-					res.redirect('/');
-					//res.sendFile(path + '/public/index.html');
-			});
-
-	// app.route('/login')
-	// 	.get(function (req, res) {
-	// 		res.sendFile(path + '/public/login.html');
-	// 	});
-	//
-	// app.route('/logout')
-	// 	.get(function (req, res) {
-	// 		req.logout();
-	// 		res.redirect('/login');
-	// 	});
-	//
-	// app.route('/profile')
-	// 	.get(isLoggedIn, function (req, res) {
-	// 		res.sendFile(path + '/public/profile.html');
-	// 	});
-	//
-	// app.route('/api/:id')
-	// 	.get(isLoggedIn, function (req, res) {
-	// 		res.json(req.user.github);
-	// 	});
-	//
-	// app.route('/auth/github')
-	// 	.get(passport.authenticate('github'));
-	//
-	// app.route('/auth/github/callback')
-	// 	.get(passport.authenticate('github', {
-	// 		successRedirect: '/',
-	// 		failureRedirect: '/login'
-	// 	}));
-	//
-	// app.route('/api/:id/clicks')
-	// 	.get(isLoggedIn, clickHandler.getClicks)
-	// 	.post(isLoggedIn, clickHandler.addClick)
-	// 	.delete(isLoggedIn, clickHandler.resetClicks);
+	app.route('/:id*')
+		.get(function (req, res) {
+			//var extra = req.params.extra;
+			site.handleRedirect(req, res, db);
+		});
 };
